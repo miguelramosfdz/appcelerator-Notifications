@@ -1,6 +1,7 @@
 function Controller() {
-    function initialize(doseInformation) {
+    function initialize(doseInformation, modifyMode) {
         $.notificationData = doseInformation;
+        $.modifyMode = modifyMode;
         var doseHours = doseInformation.doseTime.getHours();
         var doseMinutes = doseInformation.doseTime.getMinutes();
         var doseMeridiem = "";
@@ -18,35 +19,98 @@ function Controller() {
         $.timeLabel.font = {
             fontSize: "20dp"
         };
-        var hourColumn = Ti.UI.createPickerColumn();
-        for (var i = 1; 13 > i; i++) {
-            var row = Ti.UI.createPickerRow();
-            row.title = i + ":00";
-            hourColumn.addRow(row);
+        if (modifyMode) {
+            var notificationTimePicker = Ti.UI.createPicker();
+            notificationTimePicker.applyProperties({
+                id: "notificationTimePicker",
+                backgroundColor: "green",
+                selectionIndicator: false,
+                useSpinner: true,
+                minuteInterval: 30,
+                layout: "composite",
+                top: -20
+            });
+            $.notificationTimePicker = notificationTimePicker;
+            var hourColumn = Ti.UI.createPickerColumn();
+            for (var i = 1; 13 > i; i++) {
+                var row = Ti.UI.createPickerRow();
+                row.title = i + ":00";
+                hourColumn.addRow(row);
+            }
+            hourColumn.applyProperties({
+                right: "0px",
+                backgroundColor: "green"
+            });
+            var meridienColumn = Ti.UI.createPickerColumn();
+            var amRow = Ti.UI.createPickerRow();
+            var pmRow = Ti.UI.createPickerRow();
+            amRow.title = "AM";
+            pmRow.title = "PM";
+            meridienColumn.right = "0px";
+            meridienColumn.addRow(amRow);
+            meridienColumn.addRow(pmRow);
+            $.notificationTimePicker.columns = [ hourColumn, meridienColumn ];
         }
-        hourColumn.applyProperties({
-            right: "0px",
-            backgroundColor: "green"
-        });
-        var meridienColumn = Ti.UI.createPickerColumn();
-        var amRow = Ti.UI.createPickerRow();
-        var pmRow = Ti.UI.createPickerRow();
-        amRow.title = "AM";
-        pmRow.title = "PM";
-        meridienColumn.right = "0px";
-        meridienColumn.addRow(amRow);
-        meridienColumn.addRow(pmRow);
-        $.notificationTimePicker.columns = [ hourColumn, meridienColumn ];
-    }
-    function userSetNotification(e) {
-        $.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
     }
     function toggleModify() {
-        $.rowContainer.remove($.notificationTimePicker);
-        $.rowContainer.remove($.deleteLabel);
-        $.notificationTableViewRow.height = "100px";
-        $.rowContainer.height = "90px";
-        $.rowContainer.backgroundColor = "white";
+        $.modifyMode = !$.modifyMode;
+        if ($.modifyMode) {
+            var notificationTimePicker = Ti.UI.createPicker();
+            notificationTimePicker.applyProperties({
+                id: "notificationTimePicker",
+                backgroundColor: "green",
+                selectionIndicator: false,
+                useSpinner: true,
+                minuteInterval: 30,
+                layout: "composite",
+                top: -20
+            });
+            var hourColumn = Ti.UI.createPickerColumn();
+            for (var i = 1; 13 > i; i++) {
+                var row = Ti.UI.createPickerRow();
+                row.title = i + ":00";
+                hourColumn.addRow(row);
+            }
+            hourColumn.applyProperties({
+                right: "0px",
+                backgroundColor: "green"
+            });
+            var meridienColumn = Ti.UI.createPickerColumn();
+            var amRow = Ti.UI.createPickerRow();
+            var pmRow = Ti.UI.createPickerRow();
+            amRow.title = "AM";
+            pmRow.title = "PM";
+            meridienColumn.right = "0px";
+            meridienColumn.addRow(amRow);
+            meridienColumn.addRow(pmRow);
+            notificationTimePicker.columns = [ hourColumn, meridienColumn ];
+            $.rowContainer.add(notificationTimePicker);
+            $.notificationTimePicker = notificationTimePicker;
+            $.notificationTableViewRow.height = "550px";
+            $.rowContainer.height = "540px";
+            var deleteLabel = Ti.UI.createLabel();
+            deleteLabel.applyProperties({
+                id: "deleteLabel",
+                left: "5%",
+                top: -20,
+                zIndex: 1,
+                width: Ti.UI.FILL,
+                bottom: 0,
+                height: "100px",
+                backgroundColor: "#ffffff",
+                verticalAlign: "TEXT_VERTICAL_ALIGNMENT_CENTER",
+                text: "Delete Dose"
+            });
+            $.rowContainer.add(deleteLabel);
+            $.deleteLabel = deleteLabel;
+            $.rowContainer.backgroundColor = "white";
+        } else {
+            $.rowContainer.remove($.notificationTimePicker);
+            $.rowContainer.remove($.deleteLabel);
+            $.notificationTableViewRow.height = "100px";
+            $.rowContainer.height = "90px";
+            $.rowContainer.backgroundColor = "white";
+        }
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "notificationTableViewRow";
@@ -58,7 +122,7 @@ function Controller() {
     var __defers = {};
     $.__views.notificationTableViewRow = Ti.UI.createTableViewRow({
         id: "notificationTableViewRow",
-        height: "550px",
+        height: "100px",
         backgroundColor: "transparent",
         selectedBackgroundColor: "transparent"
     });
@@ -82,30 +146,6 @@ function Controller() {
     });
     $.__views.rowContainer.add($.__views.timeLabel);
     toggleModify ? $.__views.timeLabel.addEventListener("click", toggleModify) : __defers["$.__views.timeLabel!click!toggleModify"] = true;
-    $.__views.notificationTimePicker = Ti.UI.createPicker({
-        id: "notificationTimePicker",
-        backgroundColor: "green",
-        selectionIndicator: "false",
-        useSpinner: "true",
-        minuteInterval: "30",
-        layout: "composite",
-        top: "-20"
-    });
-    $.__views.rowContainer.add($.__views.notificationTimePicker);
-    userSetNotification ? $.__views.notificationTimePicker.addEventListener("change", userSetNotification) : __defers["$.__views.notificationTimePicker!change!userSetNotification"] = true;
-    $.__views.deleteLabel = Ti.UI.createLabel({
-        text: "Delete Dose",
-        id: "deleteLabel",
-        left: "5%",
-        top: "-20",
-        zIndex: "1",
-        width: Ti.UI.FILL,
-        bottom: "0",
-        height: "100px",
-        backgroundColor: "ffffff",
-        verticalAlign: "TEXT_VERTICAL_ALIGNMENT_CENTER"
-    });
-    $.__views.rowContainer.add($.__views.deleteLabel);
     exports.destroy = function() {};
     _.extend($, $.__views);
     arguments[0] || {};
@@ -115,7 +155,6 @@ function Controller() {
     $.notificationData = notificationData;
     $.initialize = initialize;
     __defers["$.__views.timeLabel!click!toggleModify"] && $.__views.timeLabel.addEventListener("click", toggleModify);
-    __defers["$.__views.notificationTimePicker!change!userSetNotification"] && $.__views.notificationTimePicker.addEventListener("change", userSetNotification);
     _.extend($, exports);
 }
 

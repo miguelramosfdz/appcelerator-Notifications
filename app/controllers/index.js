@@ -22,32 +22,34 @@ function addNotification() {
 		date:testDateNow
 	});
 	
-	addNewNotificationRow(notificationData);
+	addNewNotificationRow(notificationData, true);
 	
 	var currentScheduledNotificationsList = Ti.App.Properties.getList('scheduledNotifications') || [];
 	console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
 }
 
-function addNewNotificationRow(notificationData) {
+function addNewNotificationRow(notificationData, modifyMode) {
 	// add new notificationTableViewRow object to table
 	var newNotificationRow = Alloy.createController('notificationTableViewRow');
-	newNotificationRow.initialize(notificationData);
-	newNotificationRow.click = publicConsoleTest();
-	// newNotificationRow.timeLabel.addEventListener('click', function(e) {
-		// console.log('~~~ toggle modify mode ~~~');
-		// e.row.toggleModify(e);
-	// });
-
-	newNotificationRow.notificationTimePicker.addEventListener('change', function(e) {
-		console.log('~~~ change in child view ~~~');
-		reviseNotification(notificationData, e.selectedValue);
+	newNotificationRow.initialize(notificationData, modifyMode);
+	newNotificationRow.timeLabel.addEventListener('click', function(e) {
+		console.log('~~~ toggle modify mode ~~~');
+		
+		newNotificationRow.notificationTimePicker.addEventListener('change', function(e) {
+			console.log('~~~ change in child view ~~~');
+			reviseNotification(notificationData, e.selectedValue);
+			newNotificationRow.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
+		});
+		
+		newNotificationRow.deleteLabel.addEventListener('click', function(e) {
+			console.log('~~~ delete label clicked ~~~');
+			removeNotification(e.row.notificationData);
+			$.notificationTableView.deleteRow(e.row);
+		});
 	});
-	newNotificationRow.deleteLabel.addEventListener('click', function(e) {
-		console.log('~~~ delete label clicked ~~~');
-		removeNotification(e.row.notificationData);
-		$.notificationTableView.deleteRow(e.row);
-	});
+	
 	newNotificationRow.notificationTableViewRow.notificationData = notificationData;
+
 	$.notificationTableView.appendRow(newNotificationRow.getView());
 }
 
@@ -132,7 +134,7 @@ function userRequestsNewNotification() {
 function windowPostlayout(e) {
 	
 	_.each(scheduledNotificationsList, function(element, index, list) {
-		addNewNotificationRow(element);
+		addNewNotificationRow(element, false);
 	});
 	
 	

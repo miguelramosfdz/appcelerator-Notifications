@@ -14,22 +14,25 @@ function Controller() {
             sound: "pop.caf",
             date: testDateNow
         });
-        addNewNotificationRow(notificationData);
+        addNewNotificationRow(notificationData, true);
         var currentScheduledNotificationsList = Ti.App.Properties.getList("scheduledNotifications") || [];
         console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
     }
-    function addNewNotificationRow(notificationData) {
+    function addNewNotificationRow(notificationData, modifyMode) {
         var newNotificationRow = Alloy.createController("notificationTableViewRow");
-        newNotificationRow.initialize(notificationData);
-        newNotificationRow.click = publicConsoleTest();
-        newNotificationRow.notificationTimePicker.addEventListener("change", function(e) {
-            console.log("~~~ change in child view ~~~");
-            reviseNotification(notificationData, e.selectedValue);
-        });
-        newNotificationRow.deleteLabel.addEventListener("click", function(e) {
-            console.log("~~~ delete label clicked ~~~");
-            removeNotification(e.row.notificationData);
-            $.notificationTableView.deleteRow(e.row);
+        newNotificationRow.initialize(notificationData, modifyMode);
+        newNotificationRow.timeLabel.addEventListener("click", function() {
+            console.log("~~~ toggle modify mode ~~~");
+            newNotificationRow.notificationTimePicker.addEventListener("change", function(e) {
+                console.log("~~~ change in child view ~~~");
+                reviseNotification(notificationData, e.selectedValue);
+                newNotificationRow.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
+            });
+            newNotificationRow.deleteLabel.addEventListener("click", function(e) {
+                console.log("~~~ delete label clicked ~~~");
+                removeNotification(e.row.notificationData);
+                $.notificationTableView.deleteRow(e.row);
+            });
         });
         newNotificationRow.notificationTableViewRow.notificationData = notificationData;
         $.notificationTableView.appendRow(newNotificationRow.getView());
@@ -79,7 +82,7 @@ function Controller() {
     }
     function windowPostlayout() {
         _.each(scheduledNotificationsList, function(element) {
-            addNewNotificationRow(element);
+            addNewNotificationRow(element, false);
         });
         var footerContainer = Ti.UI.createView({
             backgroundColor: "transparent",
