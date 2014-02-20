@@ -1,5 +1,15 @@
 <Alloy>
-	<Window class="container">
-		<Label id="label" onClick="doClick">Hello, World</Label>
+	<Window class="container" onPostlayout="windowPostlayout" backgroundColor="efefee">
+		<TableView id="notificationTableView"
+			left = "10px"
+			right = "10px"
+			top = "50px"
+			width = "Ti.UI.FILL" 
+			separatorColor = "transparent"
+			separatorStyle = NONE
+			backgroundColor = "efefee"
+			onClick="tableViewRowClicked"
+			layout="vertical">
+		</TableView>
 	</Window>
 </Alloy>
