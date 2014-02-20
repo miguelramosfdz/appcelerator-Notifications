@@ -8,7 +8,6 @@
 			separatorColor = "transparent"
 			separatorStyle = NONE
 			backgroundColor = "efefee"
-			onClick="tableViewRowClicked"
 			layout="vertical">
 		</TableView>
 	</Window>

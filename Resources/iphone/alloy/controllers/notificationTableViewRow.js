@@ -38,9 +38,15 @@ function Controller() {
         meridienColumn.addRow(pmRow);
         $.notificationTimePicker.columns = [ hourColumn, meridienColumn ];
     }
-    function removeNotification() {}
     function userSetNotification(e) {
         $.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
+    }
+    function toggleModify() {
+        $.rowContainer.remove($.notificationTimePicker);
+        $.rowContainer.remove($.deleteLabel);
+        $.notificationTableViewRow.height = "100px";
+        $.rowContainer.height = "90px";
+        $.rowContainer.backgroundColor = "white";
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "notificationTableViewRow";
@@ -75,6 +81,7 @@ function Controller() {
         zIndex: "1"
     });
     $.__views.rowContainer.add($.__views.timeLabel);
+    toggleModify ? $.__views.timeLabel.addEventListener("click", toggleModify) : __defers["$.__views.timeLabel!click!toggleModify"] = true;
     $.__views.notificationTimePicker = Ti.UI.createPicker({
         id: "notificationTimePicker",
         backgroundColor: "green",
@@ -99,7 +106,6 @@ function Controller() {
         verticalAlign: "TEXT_VERTICAL_ALIGNMENT_CENTER"
     });
     $.__views.rowContainer.add($.__views.deleteLabel);
-    removeNotification ? $.__views.deleteLabel.addEventListener("click", removeNotification) : __defers["$.__views.deleteLabel!click!removeNotification"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     arguments[0] || {};
@@ -108,8 +114,8 @@ function Controller() {
     var notificationData;
     $.notificationData = notificationData;
     $.initialize = initialize;
+    __defers["$.__views.timeLabel!click!toggleModify"] && $.__views.timeLabel.addEventListener("click", toggleModify);
     __defers["$.__views.notificationTimePicker!change!userSetNotification"] && $.__views.notificationTimePicker.addEventListener("change", userSetNotification);
-    __defers["$.__views.deleteLabel!click!removeNotification"] && $.__views.deleteLabel.addEventListener("click", removeNotification);
     _.extend($, exports);
 }
 

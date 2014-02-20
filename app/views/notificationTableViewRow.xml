@@ -5,6 +5,7 @@
 			<Label id = "timeLabel" left = "5%" top = 0 height = "100px" 
 				backgroundColor = "ffffff" 
 				width=Ti.UI.FILL
+				onClick="toggleModify"
 				verticalAlign=TEXT_VERTICAL_ALIGNMENT_CENTER
 				zIndex=1 />
 			
@@ -23,7 +24,6 @@
 				bottom=0
 				height="100px"
 				backgroundColor="ffffff"
-				onClick = "removeNotification"
 				verticalAlign=TEXT_VERTICAL_ALIGNMENT_CENTER>Delete Dose</Label>
 				
 		</View>

@@ -33,9 +33,19 @@ function addNewNotificationRow(notificationData) {
 	var newNotificationRow = Alloy.createController('notificationTableViewRow');
 	newNotificationRow.initialize(notificationData);
 	newNotificationRow.click = publicConsoleTest();
+	// newNotificationRow.timeLabel.addEventListener('click', function(e) {
+		// console.log('~~~ toggle modify mode ~~~');
+		// e.row.toggleModify(e);
+	// });
+
 	newNotificationRow.notificationTimePicker.addEventListener('change', function(e) {
 		console.log('~~~ change in child view ~~~');
 		reviseNotification(notificationData, e.selectedValue);
+	});
+	newNotificationRow.deleteLabel.addEventListener('click', function(e) {
+		console.log('~~~ delete label clicked ~~~');
+		removeNotification(e.row.notificationData);
+		$.notificationTableView.deleteRow(e.row);
 	});
 	newNotificationRow.notificationTableViewRow.notificationData = notificationData;
 	$.notificationTableView.appendRow(newNotificationRow.getView());
@@ -112,44 +122,10 @@ function reviseNotification(notificationData, selectedValueArray) {
 	console.log(selectedValueArray);
 }
 
-// handling clicks
-function tableViewRowClicked(e) {
-	console.log("clicked");
-	console.log("notificaiton data on row is " + e.row.notificationData);
-	
-	removeNotification(e.row.notificationData);
-	$.notificationTableView.deleteRow(e.row);
-}
-
 function userRequestsNewNotification() {
 
 	addNotification();
-	// // add new notificationTableViewRow initialized to 'now'
-	// // hours with modifyMode turned on
-	// var testDateNow = new Date();
-	// var notificationData = {
-		// "id": testDateNow.getTime(),
-		// "title":"world",
-		// "doseTime": testDateNow
-	// };
-// 	
-	// Ti.App.iOS.scheduleLocalNotification({
-		// alertBody:"BACKGROUND NOTIFICATION FIReD",
-		// alertAction:"Re-Launch!",
-		// userInfo:notificationData,
-		// sound:"pop.caf",
-		// date:testDateNow
-	// });
-// 	
-	// var newNotificationRow = Alloy.createController('notificationTableViewRow');
-	// newNotificationRow.initialize(notificationData);
-// 	
-	// newNotificationRow.scheduledNotificationListItem = notificationData;
-	// scheduledNotificationsList.push(notificationData);
-// 	
-	// newNotificationRow.modifyMode = true;
-// 	
-	// $.notificationTableView.appendRow(newNotificationRow.getView());
+
 }
 
 // life cycle methods

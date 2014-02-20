@@ -26,6 +26,11 @@ function Controller() {
             console.log("~~~ change in child view ~~~");
             reviseNotification(notificationData, e.selectedValue);
         });
+        newNotificationRow.deleteLabel.addEventListener("click", function(e) {
+            console.log("~~~ delete label clicked ~~~");
+            removeNotification(e.row.notificationData);
+            $.notificationTableView.deleteRow(e.row);
+        });
         newNotificationRow.notificationTableViewRow.notificationData = notificationData;
         $.notificationTableView.appendRow(newNotificationRow.getView());
     }
@@ -68,12 +73,6 @@ function Controller() {
         });
         console.log(notificationData);
         console.log(selectedValueArray);
-    }
-    function tableViewRowClicked(e) {
-        console.log("clicked");
-        console.log("notificaiton data on row is " + e.row.notificationData);
-        removeNotification(e.row.notificationData);
-        $.notificationTableView.deleteRow(e.row);
     }
     function userRequestsNewNotification() {
         addNotification();
@@ -131,7 +130,6 @@ function Controller() {
         layout: "vertical"
     });
     $.__views.index.add($.__views.notificationTableView);
-    tableViewRowClicked ? $.__views.notificationTableView.addEventListener("click", tableViewRowClicked) : __defers["$.__views.notificationTableView!click!tableViewRowClicked"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     Alloy.Globals.scheduledNotificationsList = Ti.App.Properties.getList("scheduledNotifications", []);
@@ -139,7 +137,6 @@ function Controller() {
     $.publicConsoleTest = publicConsoleTest;
     $.index.open();
     __defers["$.__views.index!postlayout!windowPostlayout"] && $.__views.index.addEventListener("postlayout", windowPostlayout);
-    __defers["$.__views.notificationTableView!click!tableViewRowClicked"] && $.__views.notificationTableView.addEventListener("click", tableViewRowClicked);
     _.extend($, exports);
 }
 

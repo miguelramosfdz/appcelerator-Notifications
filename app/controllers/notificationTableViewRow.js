@@ -63,10 +63,18 @@ function initialize(doseInformation /*Date doseTime*/, modifyMode /*bool*/) {
 
 $.initialize = initialize;
 
-function removeNotification(e) {
-	// console.log("pubbles?");
-}
 
 function userSetNotification(e) {
 	$.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
+}
+
+function toggleModify(e) {
+	// we can accomplish all this stuff with classes on tss 
+	// instead of manually modifying these heights
+	$.rowContainer.remove($.notificationTimePicker);
+	$.rowContainer.remove($.deleteLabel);
+	
+	$.notificationTableViewRow.height = "100px";
+	$.rowContainer.height = "90px";
+	$.rowContainer.backgroundColor = "white";
 }
