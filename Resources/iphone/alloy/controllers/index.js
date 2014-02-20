@@ -1,6 +1,7 @@
 function Controller() {
     function addNotification() {
         var testDateNow = new Date();
+        testDateNow.setMinutes(0);
         var notificationData = {
             id: testDateNow.getTime(),
             doseTime: testDateNow
@@ -21,8 +22,7 @@ function Controller() {
     function addNewNotificationRow(notificationData, modifyMode) {
         var newNotificationRow = Alloy.createController("notificationTableViewRow");
         newNotificationRow.initialize(notificationData, modifyMode);
-        newNotificationRow.timeLabel.addEventListener("click", function() {
-            console.log("~~~ toggle modify mode ~~~");
+        if (modifyMode) {
             newNotificationRow.notificationTimePicker.addEventListener("change", function(e) {
                 console.log("~~~ change in child view ~~~");
                 reviseNotification(notificationData, e.selectedValue);
@@ -30,9 +30,25 @@ function Controller() {
             });
             newNotificationRow.deleteLabel.addEventListener("click", function(e) {
                 console.log("~~~ delete label clicked ~~~");
-                removeNotification(e.row.notificationData);
+                removeNotification(notificationData);
                 $.notificationTableView.deleteRow(e.row);
             });
+        }
+        newNotificationRow.timeLabel.addEventListener("click", function() {
+            console.log("~~~ toggle modify mode ~~~");
+            modifyMode = !modifyMode;
+            if (modifyMode) {
+                newNotificationRow.notificationTimePicker.addEventListener("change", function(e) {
+                    console.log("~~~ change in child view ~~~");
+                    reviseNotification(notificationData, e.selectedValue);
+                    newNotificationRow.timeLabel.text = e.selectedValue[0] + " " + e.selectedValue[1];
+                });
+                newNotificationRow.deleteLabel.addEventListener("click", function(e) {
+                    console.log("~~~ delete label clicked ~~~");
+                    removeNotification(notificationData);
+                    $.notificationTableView.deleteRow(e.row);
+                });
+            }
         });
         newNotificationRow.notificationTableViewRow.notificationData = notificationData;
         $.notificationTableView.appendRow(newNotificationRow.getView());
@@ -104,9 +120,6 @@ function Controller() {
         footerContainer.add(addNewNotificationFooterLabel);
         $.notificationTableView.footerView = footerContainer;
     }
-    function publicConsoleTest() {
-        console.log("pringitng from our global console");
-    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -137,7 +150,6 @@ function Controller() {
     _.extend($, $.__views);
     Alloy.Globals.scheduledNotificationsList = Ti.App.Properties.getList("scheduledNotifications", []);
     var scheduledNotificationsList = Alloy.Globals.scheduledNotificationsList;
-    $.publicConsoleTest = publicConsoleTest;
     $.index.open();
     __defers["$.__views.index!postlayout!windowPostlayout"] && $.__views.index.addEventListener("postlayout", windowPostlayout);
     _.extend($, exports);

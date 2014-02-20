@@ -1,3 +1,5 @@
+// need a separate function for "set time label" so we can handle single-digit numbers
+
 var args = arguments[0] || {};
 
 var parent;
@@ -73,6 +75,29 @@ function initialize(doseInformation /*Date doseTime*/, modifyMode /*bool*/) {
 		meridienColumn.addRow(pmRow);
 		
 		$.notificationTimePicker.columns = [hourColumn, meridienColumn];
+		$.rowContainer.add(notificationTimePicker);
+		
+		$.notificationTableViewRow.height = "550px";
+		$.rowContainer.height = "540px";
+		
+		
+		var deleteLabel = Ti.UI.createLabel();
+		deleteLabel.applyProperties({
+			id: "deleteLabel",
+			left: "5%",
+			top: -20,
+			zIndex :  1,
+			width: Ti.UI.FILL,	
+			bottom: 0,
+			height: "100px",
+			backgroundColor: "#ffffff",
+			verticalAlign: "TEXT_VERTICAL_ALIGNMENT_CENTER",
+			text: "Delete Dose"
+		});
+		$.rowContainer.add(deleteLabel);
+		$.deleteLabel = deleteLabel;
+		
+		$.rowContainer.backgroundColor = "white";
 	}
 
 }
@@ -92,7 +117,6 @@ function toggleModify(e) {
 			backgroundColor: "green", 
 			selectionIndicator: false, 
 			useSpinner: true, 
-			minuteInterval: 30,
 			layout: "composite", 
 			top: -20
 		});
