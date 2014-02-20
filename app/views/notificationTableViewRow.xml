@@ -8,23 +8,6 @@
 				onClick="toggleModify"
 				verticalAlign=TEXT_VERTICAL_ALIGNMENT_CENTER
 				zIndex=1 />
-			
-			<!-- <Picker id="notificationTimePicker" backgroundColor="green" 
-				selectionIndicator=false 
-				useSpinner=true minuteInterval=30
-				layout="composite" top=-20
-				onChange="userSetNotification"
-				> -->
-				
-			<!-- <Label id="deleteLabel"
-				left="5%"
-				top=-20
-				zIndex = 1
-				width=Ti.UI.FILL	
-				bottom=0
-				height="100px"
-				backgroundColor="ffffff"
-				verticalAlign=TEXT_VERTICAL_ALIGNMENT_CENTER>Delete Dose</Label> -->
 				
 		</View>
 	</TableViewRow>

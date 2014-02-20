@@ -20,6 +20,7 @@ function addNotification() {
 		alertBody:"BACKGROUND NOTIFICATION FIReD",
 		alertAction:"Re-Launch!",
 		userInfo:notificationData,
+		repeat: "daily",
 		sound:"pop.caf",
 		date:testDateNow
 	});
@@ -137,6 +138,7 @@ function reviseNotification(notificationData, selectedValueArray) {
 		alertBody:"BACKGROUND NOTIFICATION FIReD",
 		alertAction:"Re-Launch!",
 		userInfo:newNotificationData,
+		repeat: "daily",
 		sound:"pop.caf",
 		date:newNotificationData.doseTime
 	});

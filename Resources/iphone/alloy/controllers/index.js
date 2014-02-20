@@ -12,6 +12,7 @@ function Controller() {
             alertBody: "BACKGROUND NOTIFICATION FIReD",
             alertAction: "Re-Launch!",
             userInfo: notificationData,
+            repeat: "daily",
             sound: "pop.caf",
             date: testDateNow
         });
@@ -87,6 +88,7 @@ function Controller() {
             alertBody: "BACKGROUND NOTIFICATION FIReD",
             alertAction: "Re-Launch!",
             userInfo: newNotificationData,
+            repeat: "daily",
             sound: "pop.caf",
             date: newNotificationData.doseTime
         });
