@@ -14,6 +14,11 @@ function Controller() {
             sound: "pop.caf",
             date: testDateNow
         });
+        addNewNotificationRow(notificationData);
+        var currentScheduledNotificationsList = Ti.App.Properties.getList("scheduledNotifications") || [];
+        console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
+    }
+    function addNewNotificationRow(notificationData) {
         var newNotificationRow = Alloy.createController("notificationTableViewRow");
         newNotificationRow.initialize(notificationData);
         newNotificationRow.click = publicConsoleTest();
@@ -23,8 +28,6 @@ function Controller() {
         });
         newNotificationRow.notificationTableViewRow.notificationData = notificationData;
         $.notificationTableView.appendRow(newNotificationRow.getView());
-        var currentScheduledNotificationsList = Ti.App.Properties.getList("scheduledNotifications") || [];
-        console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
     }
     function removeNotification(notificationData) {
         Ti.App.iOS.cancelLocalNotification(notificationData.id);
@@ -76,6 +79,9 @@ function Controller() {
         addNotification();
     }
     function windowPostlayout() {
+        _.each(scheduledNotificationsList, function(element) {
+            addNewNotificationRow(element);
+        });
         var footerContainer = Ti.UI.createView({
             backgroundColor: "transparent",
             left: "10px",

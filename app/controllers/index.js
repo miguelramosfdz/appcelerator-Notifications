@@ -22,6 +22,13 @@ function addNotification() {
 		date:testDateNow
 	});
 	
+	addNewNotificationRow(notificationData);
+	
+	var currentScheduledNotificationsList = Ti.App.Properties.getList('scheduledNotifications') || [];
+	console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
+}
+
+function addNewNotificationRow(notificationData) {
 	// add new notificationTableViewRow object to table
 	var newNotificationRow = Alloy.createController('notificationTableViewRow');
 	newNotificationRow.initialize(notificationData);
@@ -32,9 +39,6 @@ function addNotification() {
 	});
 	newNotificationRow.notificationTableViewRow.notificationData = notificationData;
 	$.notificationTableView.appendRow(newNotificationRow.getView());
-	
-	var currentScheduledNotificationsList = Ti.App.Properties.getList('scheduledNotifications') || [];
-	console.log("store scheudled notificaitons list is now " + currentScheduledNotificationsList.length + " long");
 }
 
 // remove notification, called from child notificationTableViewRow view
@@ -150,6 +154,11 @@ function userRequestsNewNotification() {
 
 // life cycle methods
 function windowPostlayout(e) {
+	
+	_.each(scheduledNotificationsList, function(element, index, list) {
+		addNewNotificationRow(element);
+	});
+	
 	
 	// build tableViewFooter
 	var footerContainer = Ti.UI.createView({
