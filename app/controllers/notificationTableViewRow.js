@@ -34,6 +34,10 @@ function initialize(doseInformation /*Date doseTime*/, modifyMode /*bool*/) {
 			doseHours = 12;
 		}
 	}
+	
+	if (doseMinutes.toString().length < 2) {
+		doseMinutes = "0" + doseMinutes;
+	}
 		
 	$.timeLabel.text = doseHours + ":" + doseMinutes + " " + doseMeridiem;
 	$.timeLabel.font = {"fontSize": "20dp"};

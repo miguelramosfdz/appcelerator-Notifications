@@ -15,6 +15,7 @@ function Controller() {
             doseMeridiem = "AM";
             0 === doseHours && (doseHours = 12);
         }
+        2 > doseMinutes.toString().length && (doseMinutes = "0" + doseMinutes);
         $.timeLabel.text = doseHours + ":" + doseMinutes + " " + doseMeridiem;
         $.timeLabel.font = {
             fontSize: "20dp"
